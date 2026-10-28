@@ -7,16 +7,10 @@ function uploadDocument(req, res) {
     return res.status(400).json({ error: 'Nenhum arquivo enviado. Use o campo "file".' });
   }
 
+  // O service já devolve o formato público do documento (sem dados internos).
   const document = documentsService.createDocument(req.file, req.body.owner);
 
-  return res.status(201).json({
-    id: document.id,
-    originalName: document.originalName,
-    size: document.size,
-    mimeType: document.mimeType,
-    owner: document.owner,
-    uploadedAt: document.uploadedAt,
-  });
+  return res.status(201).json(document);
 }
 
 function listDocuments(req, res) {
