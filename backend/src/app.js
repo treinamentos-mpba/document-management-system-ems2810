@@ -11,16 +11,35 @@
 // usando multer com diskStorage. Não utilize provedores externos.
 
 const express = require('express');
+const multer = require('multer');
+
+const documentsRouter = require('./routes/documents.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Endpoint de verificação de saúde. As demais rotas (/upload, /documents,
-// /documents/:id/download) serão implementadas durante o Passo 2.
+// Endpoint de verificação de saúde.
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
+});
+
+// Rotas de documentos: /upload, /documents e /documents/:id/download.
+app.use('/', documentsRouter);
+
+// Tratamento de erros nos limites do sistema (upload e demais rotas).
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: `Falha no upload: ${err.message}` });
+  }
+
+  console.error('Erro inesperado:', err);
+  return res.status(500).json({ error: 'Erro interno do servidor.' });
 });
 
 if (require.main === module) {
