@@ -20,6 +20,15 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Rota raiz informativa: a interface web é servida pelo frontend (Vite).
+app.get('/', (req, res) => {
+  res.json({
+    name: 'DMS backend',
+    message: 'API do Document Management System. A interface web roda no frontend (http://localhost:5173).',
+    endpoints: ['GET /health', 'POST /upload', 'GET /documents', 'GET /documents/:id/download'],
+  });
+});
+
 // Endpoint de verificação de saúde.
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
