@@ -11,7 +11,9 @@ const multer = require('multer');
 
 const documentsController = require('../controllers/documents.controller');
 
-const STORAGE_DIR = path.resolve(__dirname, '..', '..', 'storage');
+const STORAGE_DIR = path.resolve(
+  process.env.STORAGE_DIR || path.join(__dirname, '..', '..', 'storage'),
+);
 
 // Garante que a pasta de armazenamento exista antes de receber uploads.
 fs.mkdirSync(STORAGE_DIR, { recursive: true });
